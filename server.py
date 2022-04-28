@@ -1,6 +1,5 @@
 import socket
 from _thread import *
-from player import Player
 import pickle
 from game import Game
 
@@ -20,9 +19,6 @@ print('Server started test')
 connected = set()
 games = {}
 idCount = 0
-
-
-players = [Player(0, 0, 50, 50, (255, 0, 0)), Player(100, 100, 50, 50, (0, 255, 0))]
 
 def threading_client(conn, p, gameId):
     global idCount

@@ -1,6 +1,5 @@
 import pygame
 from network import Network
-from player import Player
 pygame.font.init()
 
 WIDTH = 700
@@ -140,6 +139,26 @@ def main():
         
         redrawWindow(win, game, player)
 
+def menu():
+    run = True
+    clock = pygame.time.Clock()
+
+    while run:
+        clock.tick(60)
+        win.fill((112, 109, 109))
+        font = pygame.font.SysFont('comicsans', 40)
+        text = font.render('Click to queue with someone else', 1, (0, 0, 0))
+        win.blit(text, (100, 50))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                run = False
+    main()
 
 
-main()
+while True:
+    menu()
