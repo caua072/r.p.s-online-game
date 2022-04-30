@@ -32,7 +32,7 @@ class Button:
             return False
 
 
-def redrawWindow(win, game, p):
+def redrawWindow(win, game, p, pts0, pts1):
     win.fill((112, 109, 109))
     
     if not(game.connected()):
@@ -41,7 +41,10 @@ def redrawWindow(win, game, p):
         win.blit(text, (WIDTH/2 - text.get_width()/2, HEIGHT/2 - text.get_height()/2))
     else:
         font = pygame.font.SysFont('comicsans', 45)
+        fontpts = pygame.font.SysFont('comicsans', 25)
         text = font.render('Your move', 1, (0, 255, 255))
+        textpts0 = fontpts.render('Player1: %s' % pts0, 1, (0, 0, 0))
+        textpts1 = fontpts.render('Player2: %s' % pts1, 1, (0, 0, 0))
         win.blit(text, (80, 200))
 
         text = font.render('Opponent move', 1, (0, 255, 255))
@@ -71,9 +74,13 @@ def redrawWindow(win, game, p):
         if p == 1:
             win.blit(text2, (100, 350))
             win.blit(text1, (400, 350))
+            win.blit(textpts1, (20, 30))
+            win.blit(textpts0, (20, 60))
         else:
             win.blit(text1, (100, 350))
             win.blit(text2, (400, 350))
+            win.blit(textpts0, (20, 30))
+            win.blit(textpts1, (20, 60))
         
         for btn in btns:
             btn.draw(win)
@@ -89,6 +96,8 @@ def main():
     n = Network()
     player = int(n.getP())
     print('Player: ', player)
+    pts0 = 0
+    pts1 = 0
 
     while run:
         clock.tick(60)
@@ -100,7 +109,7 @@ def main():
             break
 
         if game.bothWent():
-            redrawWindow(win, game, player)
+            redrawWindow(win, game, player, pts0, pts1)
             pygame.time.delay(500)
             try:
                 game = n.send('reset')
@@ -115,6 +124,11 @@ def main():
                 text = font.render('You lost', 1, (255, 0, 0))
             else:
                 text = font.render('Tied game', 1, (0, 0, 255))
+
+            if game.winner() == 0:
+                pts0 += 1
+            elif game.winner() == 1:
+                pts1 += 1
 
             win.blit(text, (WIDTH/2 - text.get_width()/2, HEIGHT/2 - text.get_height()/2))
             pygame.display.update()
@@ -137,7 +151,7 @@ def main():
                             if not game.p2Went:
                                 n.send(btn.text)
         
-        redrawWindow(win, game, player)
+        redrawWindow(win, game, player, pts0, pts1)
 
 def menu():
     run = True
